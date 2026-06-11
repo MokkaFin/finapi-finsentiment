@@ -130,6 +130,16 @@ def create_app() -> Flask:
                 for r in rows
             ],
         })
+    @app.get("/db/stats")
+    def db_stats():
+        """Renvoie le nombre de lignes par table."""
+        with SessionLocal() as session:
+            price_count = session.query(PriceRecord).count()
+            news_count = session.query(NewsItem).count()
+        return jsonify({
+            "prices": price_count,
+            "news": news_count,
+        })
     return app
 
 
