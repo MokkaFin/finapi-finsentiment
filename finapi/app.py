@@ -1,11 +1,12 @@
 """Application Flask exposant les endpoints de prix."""
 from flask import Flask, jsonify, request
 from finapi.prices import TickerNotFoundError, get_history, get_latest_price
-
+from finapi.db import SessionLocal, init_db
+from finapi.models import PriceRecord, NewsItem
 
 def create_app() -> Flask:
     app = Flask(__name__)
-
+    init_db()
     @app.get("/health")
     def health():
         return jsonify({"status": "ok"}), 200
@@ -87,7 +88,48 @@ def create_app() -> Flask:
             "prices": results,
             "errors": errors,
         })
+    @app.get("/db/prices/<ticker>")
+    def db_prices(ticker: str):
+        """Lit les prix stockés pour un ticker (les plus récents en premier)."""
+        with SessionLocal() as session:
+            rows = (
+                session.query(PriceRecord)
+                .filter(PriceRecord.ticker == ticker.upper())
+                .order_by(PriceRecord.date.desc())
+                .limit(100)
+                .all()
+            )
+        return jsonify({
+            "ticker": ticker.upper(),
+            "count": len(rows),
+            "prices": [{"date": r.date.isoformat(), "close": r.close} for r in rows],
+        })
 
+
+    @app.get("/db/news/<ticker>")
+    def db_news(ticker: str):
+        """Lit les news stockées pour un ticker."""
+        with SessionLocal() as session:
+            rows = (
+                session.query(NewsItem)
+                .filter(NewsItem.ticker == ticker.upper())
+                .order_by(NewsItem.published_at.desc())
+                .limit(20)
+                .all()
+            )
+        return jsonify({
+            "ticker": ticker.upper(),
+            "count": len(rows),
+            "news": [
+                {
+                    "published_at": r.published_at.isoformat(),
+                    "title": r.title,
+                    "publisher": r.publisher,
+                    "url": r.url,
+                }
+                for r in rows
+            ],
+        })
     return app
 
 
