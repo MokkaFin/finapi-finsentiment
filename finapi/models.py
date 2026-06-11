@@ -1,5 +1,5 @@
 """Modèles SQLAlchemy : prix et news."""
-from sqlalchemy import Column, Integer, String, Float, Date, DateTime, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Float, Date, DateTime, UniqueConstraint, Index
 from finapi.db import Base
 
 
@@ -27,3 +27,8 @@ class NewsItem(Base):
     publisher    = Column(String(128))
     url          = Column(String(1024), unique=True)  
     summary      = Column(String(2048))
+    sentiment_label = Column(String(16), nullable=True)
+    sentiment_score = Column(Float, nullable=True)
+    __table_args__ = (
+        Index("ix_news_ticker_published_at", "ticker", "published_at"),
+    )
