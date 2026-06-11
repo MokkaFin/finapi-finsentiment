@@ -81,6 +81,22 @@ curl -i "http://localhost:5000/history/AAPL?days=abc"
   "currency": "USD"
 }
 ```
+## Lab 2 — Nouvelles commandes
+
+# Initialiser la base
+PYTHONPATH=. python -c "from finapi.db import init_db; init_db()"
+
+# Ingérer les données
+PYTHONPATH=. python scripts/run_etl.py AAPL MSFT GOOGL
+
+# Résumé de la base
+PYTHONPATH=. python scripts/show_db.py
+
+## Nouveaux endpoints
+
+GET /db/prices/<ticker>   — prix stockés en base (100 derniers)
+GET /db/news/<ticker>     — news stockées en base (20 dernières)
+GET /db/stats             — nombre de lignes par table
 
 ## Author
 
