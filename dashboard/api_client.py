@@ -1,6 +1,9 @@
 """HTTP client for the finapi Flask API."""
+
 from __future__ import annotations
+
 from typing import Any
+
 import requests
 
 API_BASE = "http://localhost:5000"

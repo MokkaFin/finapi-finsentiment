@@ -1,7 +1,9 @@
 """Acces aux donnees de marche via yfinance."""
+
 from dataclasses import dataclass
 from datetime import date
 from functools import lru_cache
+
 import yfinance as yf
 
 

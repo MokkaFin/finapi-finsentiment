@@ -1,8 +1,11 @@
 """ETL des prix : Extract via yfinance, Load dans SQLite."""
+
 import logging
 import math
+
 import yfinance as yf
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+
 from finapi.db import SessionLocal
 from finapi.models import PriceRecord
 

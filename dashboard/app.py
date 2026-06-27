@@ -1,8 +1,11 @@
 """Interactive financial sentiment analysis dashboard."""
+
 from datetime import datetime
+
 import streamlit as st
+
 from dashboard import api_client as api
-from dashboard.charts import price_line_chart, sentiment_pie_chart, SENT_COLORS
+from dashboard.charts import SENT_COLORS, price_line_chart, sentiment_pie_chart
 
 # -------- Page config --------
 st.set_page_config(
@@ -46,18 +49,22 @@ with st.sidebar:
 st.title(f":chart_with_upwards_trend: FinSentiment - {ticker}")
 st.caption("Interactive dashboard - prices, news, FinBERT sentiment")
 
+
 # -------- Data loading with cache --------
 @st.cache_data(ttl=60)
 def load_prices(t: str):
     return api.get_db_prices(t)
 
+
 @st.cache_data(ttl=60)
 def load_news(t: str):
     return api.get_db_news(t)
 
+
 @st.cache_data(ttl=60)
 def load_summary(t: str):
     return api.get_sentiment_summary(t)
+
 
 prices = load_prices(ticker)
 news = load_news(ticker)
