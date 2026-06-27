@@ -98,6 +98,51 @@ GET /db/prices/<ticker>   — prix stockés en base (100 derniers)
 GET /db/news/<ticker>     — news stockées en base (20 dernières)
 GET /db/stats             — nombre de lignes par table
 
+## Lab 3 — FinBERT Sentiment Analysis
+
+### Install dependencies
+pip install transformers
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+### Enrich news with sentiment scores
+PYTHONPATH=. python scripts/enrich_sentiment.py
+
+### New endpoints
+
+POST /sentiment
+Body: {"text": "..."}
+Returns: label (positive/neutral/negative), score, text_preview
+
+POST /sentiment/batch
+Body: {"texts": ["...", "...", ...]} (max 100)
+Returns: count, list of results
+
+GET /db/sentiment-summary/<ticker>
+Returns: sentiment distribution for a ticker
+
+## Lab 4 — Streamlit Dashboard
+
+### Install dependencies
+pip install streamlit plotly requests
+
+### Launch (two terminals required)
+
+# Terminal 1 — Flask API
+PYTHONPATH=. python -m finapi.app
+
+# Terminal 2 — Streamlit dashboard
+PYTHONPATH=. streamlit run dashboard/app.py
+
+Open http://localhost:8501 in your browser.
+
+### Features
+- Sidebar with ticker selection (AAPL, MSFT, GOOGL) and refresh button
+- 4 metrics: latest price, date, news count, % positive sentiment
+- Interactive Plotly price chart
+- Sentiment distribution pie chart
+- Latest 15 news colored by sentiment (green/red/grey)
+- 60s cache on all API calls
+
 ## Author
 
-Molka — EPT, M1 Finance Quantitative
+Molka — EPT, M1 Quantitative Economics and Finance
