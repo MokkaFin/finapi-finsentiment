@@ -133,13 +133,21 @@ def create_app() -> Flask:
         })
     @app.get("/db/stats")
     def db_stats():
-        """Renvoie le nombre de lignes par table."""
+        """Returns row counts and metadata per table."""
         with SessionLocal() as session:
             price_count = session.query(PriceRecord).count()
             news_count = session.query(NewsItem).count()
+            news_enriched = session.query(NewsItem).filter(
+                NewsItem.sentiment_label.isnot(None)
+            ).count()
+            tickers = [
+                r[0] for r in session.query(PriceRecord.ticker).distinct().all()
+            ]
         return jsonify({
-            "prices": price_count,
-            "news": news_count,
+            "prices_count": price_count,
+            "news_count": news_count,
+            "news_enriched": news_enriched,
+            "tickers": tickers,
         })
     @app.post("/sentiment")
     def sentiment():
