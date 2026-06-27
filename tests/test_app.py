@@ -1,5 +1,7 @@
 """Tests basiques pour l'API Flask."""
+
 import pytest
+
 from finapi.app import create_app
 
 

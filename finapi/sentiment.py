@@ -1,8 +1,11 @@
 """Service d'analyse de sentiment financier via FinBERT."""
+
 from __future__ import annotations
+
 import logging
 from dataclasses import dataclass
 from functools import lru_cache
+
 from transformers import pipeline
 
 log = logging.getLogger(__name__)
@@ -11,8 +14,8 @@ MODEL_NAME = "ProsusAI/finbert"
 
 @dataclass
 class SentimentResult:
-    label: str        # "positive" / "neutral" / "negative"
-    score: float      # probabilité 0..1
+    label: str  # "positive" / "neutral" / "negative"
+    score: float  # probabilité 0..1
     text_preview: str
 
 
@@ -49,5 +52,5 @@ def analyze_batch(texts: list[str]) -> list[SentimentResult]:
             score=round(float(o["score"]), 4),
             text_preview=t[:80] + ("..." if len(t) > 80 else ""),
         )
-        for t, o in zip(truncated, outputs)
+        for t, o in zip(truncated, outputs, strict=False)
     ]
