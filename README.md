@@ -1,3 +1,4 @@
+![CI](https://github.com/MokkaFin/finapi-finsentiment/actions/workflows/ci.yml/badge.svg)
 # FinAPI — Stock Price REST API
 
 A lightweight REST API built with Python and Flask that returns real-time stock market data using Yahoo Finance (`yfinance`). Built as part of the M1/M2 Finance Quantitative program at ITBS.
@@ -120,7 +121,7 @@ Returns: count, list of results
 GET /db/sentiment-summary/<ticker>
 Returns: sentiment distribution for a ticker
 
-## Lab 4 — Streamlit Dashboard
+## Lab 4 — Streamlit Dashboard  
 
 ### Install dependencies
 pip install streamlit plotly requests
