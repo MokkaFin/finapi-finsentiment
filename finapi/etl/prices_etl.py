@@ -1,5 +1,6 @@
 """ETL des prix : Extract via yfinance, Load dans SQLite."""
 import logging
+import math
 import yfinance as yf
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from finapi.db import SessionLocal
@@ -27,6 +28,7 @@ def ingest_prices(ticker: str, period: str = "1mo") -> int:
             "currency": "USD",
         }
         for ts, close in history["Close"].items()
+        if not math.isnan(float(close))  # filtre les NaN
     ]
 
     with SessionLocal() as session:
